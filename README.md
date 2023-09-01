@@ -1,14 +1,12 @@
-Most of the code has been copy-pasted from https://github.com/jshttp/basic-auth
+# Simple Reverse Proxy with Http-Basic Auth via Cloudflare Workers
 
-# Why
+> Forked from https://github.com/dommmel/cloudflare-workers-basic-auth and add simple reverse proxy
 
-I use it to protect static html pages.
-
-# Usage
-
-1. Set credentials in `index.js`
+## Usage
+1. Set secrets and target host name in `index.js`
+```javascript
+const SECRET = "your-secret";               // Set your secret key here
+const HOST_NAME = "target-website.com";     // Set target website you want to proxy here
 ```
-const NAME = "super"
-const PASS = "secret"
-```
-3. Save and copy `index.js` to your cloudflare worker and deploy
+2. Save and copy `index.js` to your CloudFlare worker, then deploy
+3. Visit `https://your-secret@xxx.workers.dev` to pass http-basic auth and access target website through proxy

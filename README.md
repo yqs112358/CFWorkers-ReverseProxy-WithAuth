@@ -2,6 +2,12 @@
 
 > Forked from https://github.com/dommmel/cloudflare-workers-basic-auth and add simple reverse proxy
 
+## Attention!
+Never create reverse proxy on Cloudflare Workers **without auth protection**! 
+
+- Services without auth may be abused, and then lead to your CloudFlare account being locked.
+- Use this project to protect your proxy behind http-basic auth.
+
 ## Usage
 1. Set secrets and target host name in `index.js`
 ```javascript

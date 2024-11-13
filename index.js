@@ -1,7 +1,6 @@
 const SECRET = "your-secret";               // Set your secret key here
-const HOST_NAME = "target-website.com";     // Set target website you want to proxy here
+const HOST_NAME = "target-website.com";     // Set target hostname you want to proxy here
 
-//const PASS = "";
 
 /**
  * RegExp for basic auth credentials
@@ -76,17 +75,21 @@ const unauthorizedResponse = function(body) {
  */
 
 async function handle(request) {
-  const credentials = parseAuthHeader(request.headers.get("Authorization"));
-  if ( !credentials || credentials.name !== SECRET /*||  credentials.pass !== PASS*/) {
-    return unauthorizedResponse("Unauthorized");
-  } else {
-    // ok
-    let url = new URL(request.url);
-    if (url.pathname.startsWith('/')) {
-      url.hostname = HOST_NAME;
-      let new_request = new Request(url, request);
-      return fetch(new_request);
-    }
+  if(SECRET !== "") {
+    const credentials = parseAuthHeader(request.headers.get("Authorization"));
+    // treat "username" slot as the auth-secret
+    if(!credentials || credentials.name !== SECRET) {
+      return unauthorizedResponse("Unauthorized");
+    } 
+  }
+
+  let url = new URL(request.url);
+  if (url.pathname.startsWith('/')) {
+    url.host = HOST_NAME;
+    let new_request = new Request(url, request);
+    return fetch(new_request);
+  } 
+  else {
     return fetch(request);
   }
 }

@@ -1,5 +1,6 @@
 const SECRET = "your-secret";               // Set your secret key here
 const HOST_NAME = "target-website.com";     // Set target hostname you want to proxy here
+const SUB_PATH = "";                        // Set the sub-path you want to proxy here
 
 
 /**
@@ -22,39 +23,26 @@ const CREDENTIALS_REGEXP = /^ *(?:[Bb][Aa][Ss][Ii][Cc]) +([A-Za-z0-9._~+/-]+=*) 
 
 const USER_PASS_REGEXP = /^([^:]*):(.*)$/;
 
-/**
- * Object to represent user credentials.
- */
 
 const Credentials = function(name, pass) {
   this.name = name;
   this.pass = pass;
 }
 
-/**
- * Parse basic auth to object.
- */
-
 const parseAuthHeader = function(string) {
   if (typeof string !== 'string') {
     return undefined;
   }
 
-  // parse header
   const match = CREDENTIALS_REGEXP.exec(string);
-
   if (!match) {
     return undefined;
   }
 
-  // decode user pass
   const userPass = USER_PASS_REGEXP.exec(atob(match[1]));
-
   if (!userPass) {
     return undefined;
   }
-
-  // return credentials object
   return new Credentials(userPass[1], userPass[2]);
 }
 
@@ -84,14 +72,16 @@ async function handle(request) {
   }
 
   let url = new URL(request.url);
-  if (url.pathname.startsWith('/')) {
-    url.host = HOST_NAME;
-    let new_request = new Request(url, request);
-    return fetch(new_request);
-  } 
-  else {
-    return fetch(request);
+  // rewrite hostname and port
+  url.host = HOST_NAME;
+  // rewrite sub-path if needed
+  if (SUB_PATH !== "" && SUB_PATH !== "/"){
+    let newPath = SUB_PATH + url.pathname;
+    url.pathname = newPath;
   }
+
+  let new_request = new Request(url, request);
+  return fetch(new_request);
 }
 
 addEventListener('fetch', event => {

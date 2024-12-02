@@ -6,13 +6,16 @@
 Never create reverse proxy on Cloudflare Workers **without auth protection**! 
 
 - Services without auth may be abused, and then lead to your CloudFlare account being locked.
-- Use this project to protect your proxy behind http-basic auth.
+- Use this project to protect your reverse proxy behind http-basic auth.
 
 ## Usage
-1. Set secrets and target host name in `index.js`
+1. Create a new CloudFlare worker
+2. Copy the code from [index.js](https://github.com/yqs112358/CFWorker-BasicAuth-Reverse-Proxy/blob/master/index.js) to CloudFlare worker's code editor
+3. Set reverse parameters at the top of `index.js`
 ```javascript
-const SECRET = "your-secret";               // Set your secret key here
-const HOST_NAME = "target-website.com";     // Set target website you want to proxy here
+const SECRET    = "your-secret";           // Set your secret key
+const HOST_NAME = "target-website.com";    // Set target hostname you want to proxy (For example: "somewebsite.com" / "anotherwebsite.net:12345")
+const SUB_PATH  = "/";                     // Set the sub-path you want to proxy ("/" in default)
 ```
-2. Save and copy `index.js` to your CloudFlare worker, then deploy
-3. Visit `https://your-secret@xxx.workers.dev` to pass http-basic auth and access target website through proxy
+4. Save and deploy your CloudFlare worker
+5. Visit `https://your-secret@xxx.workers.dev` to pass http-basic auth and access target website through proxy

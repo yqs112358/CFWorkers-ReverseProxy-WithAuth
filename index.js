@@ -1,6 +1,6 @@
-const SECRET = "your-secret";               // Set your secret key here
-const HOST_NAME = "target-website.com";     // Set target hostname you want to proxy here
-const SUB_PATH = "";                        // Set the sub-path you want to proxy here
+const SECRET    = "your-secret";           // Set your secret key
+const HOST_NAME = "target-website.com";    // Set target hostname you want to proxy (For example: "somewebsite.com" / "anotherwebsite.net:12345")
+const SUB_PATH  = "/";                     // Set the sub-path you want to proxy ("/" in default)
 
 
 /**
